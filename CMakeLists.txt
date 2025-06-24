@@ -1,3 +1,5 @@
+add_subdirectory(${CMAKE_SOURCE_DIR}/lib/engine/Source/Third_Party/SDL ${CMAKE_BINARY_DIR}/lib/engine/Source/Third_Party/SDL)
+
 cmake_minimum_required(VERSION 3.30)
 project(PolarisEngine)
 
@@ -18,6 +20,15 @@ add_library(PolarisEngine SHARED library.cpp
         Source/Runtime/Core/Rendering/PlatformRendering.h
         Source/Runtime/Core/Rendering/PlatformRendering.cpp)
 
+target_link_libraries(PolarisEngine
+    PUBLIC
+        SDL3::SDL3
+        SDL3_Image
+        SDL3_Mixer
+        SDL3_ttf
+        PolarisEngine_Headers
+)
+
 # Set the library name to engine.dll and output directories
 set_target_properties(PolarisEngine PROPERTIES
     OUTPUT_NAME "engine"
@@ -32,6 +43,3 @@ set_target_properties(PolarisEngine PROPERTIES
 # Create an interface target for the headers
 add_library(PolarisEngine_Headers INTERFACE)
 target_include_directories(PolarisEngine_Headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-
-# Make the main library include the headers
-target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers)
