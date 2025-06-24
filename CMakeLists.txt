@@ -1,44 +1,49 @@
-add_subdirectory(${CMAKE_SOURCE_DIR}/lib/engine/Source/Third_Party/SDL ${CMAKE_BINARY_DIR}/lib/engine/Source/Third_Party/SDL)
-
 cmake_minimum_required(VERSION 3.30)
 project(PolarisEngine)
 
 set(CMAKE_CXX_STANDARD 20)
 
-if(WIN32)
-    add_definitions(-DPLATFORM_WINDOWS)
-elseif(APPLE)
-    add_definitions(-DPLATFORM_MAC)
-elseif(UNIX AND NOT ANDROID)
-    add_definitions(-DPLATFORM_LINUX)
-elseif(ANDROID)
-    add_definitions(-DPLATFORM_ANDROID)
-endif()
+# Find Vulkan and SDL3 (installed by install.bat)
+find_package(Vulkan REQUIRED)
+find_package(SDL3 REQUIRED PATHS "${CMAKE_CURRENT_LIST_DIR}/Packages") #If not found run install.bat
 
 # Create the shared library
-add_library(PolarisEngine SHARED library.cpp
-        Source/Runtime/Core/Rendering/PlatformRendering.cpp)
-
-target_link_libraries(PolarisEngine
-    PUBLIC
-        SDL3::SDL3
-        SDL3_Image
-        SDL3_Mixer
-        SDL3_ttf
-        PolarisEngine_Headers
+add_library(PolarisEngine SHARED
+    library.cpp
+    Source/Runtime/Core/Rendering/PlatformRendering.cpp
 )
 
-# Set the library name to engine.dll and output directories
+# Platform-specific compile definitions and options
+if(WIN32)
+    target_compile_definitions(PolarisEngine PRIVATE PLATFORM_WINDOWS _USE_MATH_DEFINES VK_USE_PLATFORM_WIN32_KHR)
+    target_link_libraries(PolarisEngine PUBLIC Vulkan::Vulkan)
+elseif(APPLE)
+    target_compile_definitions(PolarisEngine PRIVATE PLATFORM_MAC)
+
+elseif(UNIX AND NOT ANDROID)
+    target_compile_definitions(PolarisEngine PRIVATE PLATFORM_LINUX)
+elseif(ANDROID)
+    target_compile_definitions(PolarisEngine PRIVATE PLATFORM_ANDROID)
+endif()
+
+# Link SDL3 and headers
+target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers SDL3::SDL3)
+
+# Set output directories
 set_target_properties(PolarisEngine PROPERTIES
     OUTPUT_NAME "engine"
     RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/out/debug
-    RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/out/release
     LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/out/debug
-    LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/out/release
     ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/out/debug
-    ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/out/release
 )
 
-# Create an interface target for the headers
+# Interface target for headers
 add_library(PolarisEngine_Headers INTERFACE)
 target_include_directories(PolarisEngine_Headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Copy SDL3.dll to output directory after build
+add_custom_command(TARGET PolarisEngine POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_LIST_DIR}/Packages/bin/SDL3.dll"
+        $<TARGET_FILE_DIR:PolarisEngine>
+)
