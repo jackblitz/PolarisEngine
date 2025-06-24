@@ -7,3 +7,6 @@
 [submodule "Source/Third_Party/SDL_mixer"]
 	path = Source/Third_Party/SDL_mixer
 	url = https://github.com/libsdl-org/SDL_mixer.git
+[submodule "Source/Third_Party/SDL_ttf"]
+	path = Source/Third_Party/SDL_ttf
+	url = https://github.com/libsdl-org/SDL_ttf.git
