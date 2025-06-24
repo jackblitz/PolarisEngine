@@ -17,7 +17,6 @@ endif()
 
 # Create the shared library
 add_library(PolarisEngine SHARED library.cpp
-        Source/Runtime/Core/Rendering/PlatformRendering.h
         Source/Runtime/Core/Rendering/PlatformRendering.cpp)
 
 target_link_libraries(PolarisEngine
