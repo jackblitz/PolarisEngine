@@ -1,0 +1,6 @@
+#ifndef POLARISENGINE_LIBRARY_H
+#define POLARISENGINE_LIBRARY_H
+
+void hello();
+
+#endif //POLARISENGINE_LIBRARY_H
