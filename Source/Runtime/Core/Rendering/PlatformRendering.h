@@ -13,7 +13,7 @@ class PlatformRendering {
     static PlatformRendering* getInstance();
 
 protected:
-    static PlatformRendering* instance;
+    static PlatformRendering* _instance;
 };
 
 #endif //PLATFORMRENDERING_H

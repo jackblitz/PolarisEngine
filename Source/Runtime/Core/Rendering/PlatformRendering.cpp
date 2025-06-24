@@ -5,7 +5,7 @@
 #include "PlatformRendering.h"
 
 
-PlatformRendering* PlatformRendering::instance_ = nullptr;
+PlatformRendering* PlatformRendering::_instance = nullptr;
 
 PlatformRendering::PlatformRendering() {
 
@@ -15,15 +15,15 @@ PlatformRendering::~PlatformRendering() {
 }
 
 PlatformRendering * PlatformRendering::getInstance() {
-#ifdef PLATFORM_ANDROID
-    if (!instance_) {
+/*#ifdef PLATFORM_ANDROID
+    if (!_instance) {
         instance_ = new PlatformAndroid();
     }
 #elif defined(PLATFORM_WINDOWS)
-    if (!instance_) {
+    if (!_instance) {
         instance_ = new PlatformWindows();
     }
 #else
-#endif
-    return instance_;
+#endif*/
+    return _instance;
 }

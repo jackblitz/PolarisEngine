@@ -13,9 +13,20 @@ elseif(ANDROID)
     add_definitions(-DPLATFORM_ANDROID)
 endif()
 
-# Set the library name to engine.dll
+# Create the shared library
+add_library(PolarisEngine SHARED library.cpp
+        Source/Runtime/Core/Rendering/PlatformRendering.h
+        Source/Runtime/Core/Rendering/PlatformRendering.cpp)
+
+# Set the library name to engine.dll and output directories
 set_target_properties(PolarisEngine PROPERTIES
-        OUTPUT_NAME "engine"
+    OUTPUT_NAME "engine"
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/out/debug
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/out/release
+    LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/out/debug
+    LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/out/release
+    ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/out/debug
+    ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/out/release
 )
 
 # Create an interface target for the headers
@@ -24,7 +35,3 @@ target_include_directories(PolarisEngine_Headers INTERFACE ${CMAKE_CURRENT_SOURC
 
 # Make the main library include the headers
 target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers)
-
-add_library(PolarisEngine SHARED library.cpp
-        Source/Runtime/Core/Rendering/PlatformRendering.h
-        Source/Runtime/Core/Rendering/PlatformRendering.cpp)
