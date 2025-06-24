@@ -1,3 +1,6 @@
 [submodule "Source/Third_Party/SDL"]
 	path = Source/Third_Party/SDL
 	url = https://github.com/libsdl-org/SDL.git
+[submodule "Source/Third_Party/SDL_image"]
+	path = Source/Third_Party/SDL_image
+	url = https://github.com/libsdl-org/SDL_image.git
