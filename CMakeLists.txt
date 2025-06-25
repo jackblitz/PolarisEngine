@@ -6,6 +6,9 @@ set(CMAKE_CXX_STANDARD 20)
 # Find Vulkan and SDL3 (installed by install.bat)
 find_package(Vulkan REQUIRED)
 find_package(SDL3 REQUIRED PATHS "${CMAKE_CURRENT_LIST_DIR}/Packages") #If not found run install.bat
+find_package(SDL3_image REQUIRED PATHS "${CMAKE_CURRENT_LIST_DIR}/Packages")
+find_package(SDL3_mixer REQUIRED PATHS "${CMAKE_CURRENT_LIST_DIR}/Packages")
+find_package(SDL3_ttf REQUIRED PATHS "${CMAKE_CURRENT_LIST_DIR}/Packages")
 
 # Create the shared library
 add_library(PolarisEngine SHARED
@@ -27,7 +30,7 @@ elseif(ANDROID)
 endif()
 
 # Link SDL3 and headers
-target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers SDL3::SDL3)
+target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf SDL3_mixer::SDL3_mixer)
 
 # Set output directories
 set_target_properties(PolarisEngine PROPERTIES
@@ -45,5 +48,23 @@ target_include_directories(PolarisEngine_Headers INTERFACE ${CMAKE_CURRENT_SOURC
 add_custom_command(TARGET PolarisEngine POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_LIST_DIR}/Packages/bin/SDL3.dll"
+        $<TARGET_FILE_DIR:PolarisEngine>
+)
+
+add_custom_command(TARGET PolarisEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_LIST_DIR}/Packages/bin/SDL3_image.dll"
+        $<TARGET_FILE_DIR:PolarisEngine>
+)
+
+add_custom_command(TARGET PolarisEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_LIST_DIR}/Packages/bin/SDL3_mixer.dll"
+        $<TARGET_FILE_DIR:PolarisEngine>
+)
+
+add_custom_command(TARGET PolarisEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_LIST_DIR}/Packages/bin/SDL3_ttf.dll"
         $<TARGET_FILE_DIR:PolarisEngine>
 )
