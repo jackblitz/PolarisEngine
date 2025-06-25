@@ -10,3 +10,6 @@
 [submodule "Source/Third_Party/SDL_ttf"]
 	path = Source/Third_Party/SDL_ttf
 	url = https://github.com/libsdl-org/SDL_ttf.git
+[submodule "Source/Third_Party/freetype"]
+	path = Source/Third_Party/freetype
+	url = https://github.com/freetype/freetype.git
