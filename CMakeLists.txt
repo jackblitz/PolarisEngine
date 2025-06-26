@@ -3,17 +3,33 @@ project(PolarisEngine)
 
 set(CMAKE_CXX_STANDARD 20)
 
-# Find Vulkan and SDL3 (installed by install.bat)
+# Set paths for third-party libraries
+set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/source/third_party)
+set(INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/packages)
+
+# Build SDL3
+add_subdirectory(${THIRD_PARTY_DIR}/SDL)
+
+# Build SDL3_image (depends on SDL3)
+#Diable Dav!d and enable aom for AV1 decoding
+#set(SDL_IMAGE_AVIF OFF CACHE BOOL "Disable AVIF support in SDL_image" FORCE)
+add_subdirectory(${THIRD_PARTY_DIR}/SDL_image)
+
+# Build SDL3_mixer (depends on SDL3)
+add_subdirectory(${THIRD_PARTY_DIR}/SDL_mixer)
+
+set(SDLTTF_VENDORED TRUE CACHE BOOL "Use vendored third-party libraries" FORCE)
+
+# Build SDL3_ttf (depends on SDL3 and FreeType)
+add_subdirectory(${THIRD_PARTY_DIR}/SDL_ttf)
+
+# Find Vulkan
 find_package(Vulkan REQUIRED)
-find_package(SDL3 REQUIRED PATHS "${CMAKE_CURRENT_LIST_DIR}/Packages") #If not found run install.bat
-find_package(SDL3_image REQUIRED PATHS "${CMAKE_CURRENT_LIST_DIR}/Packages")
-find_package(SDL3_mixer REQUIRED PATHS "${CMAKE_CURRENT_LIST_DIR}/Packages")
-find_package(SDL3_ttf REQUIRED PATHS "${CMAKE_CURRENT_LIST_DIR}/Packages")
 
 # Create the shared library
 add_library(PolarisEngine SHARED
     library.cpp
-    Source/Runtime/Core/Rendering/PlatformRendering.cpp
+        source/runtime/core/rendering/PlatformRendering.cpp
 )
 
 # Platform-specific compile definitions and options
@@ -33,38 +49,13 @@ endif()
 target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf SDL3_mixer::SDL3_mixer)
 
 # Set output directories
-set_target_properties(PolarisEngine PROPERTIES
-    OUTPUT_NAME "engine"
-    RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/out/debug
-    LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/out/debug
-    ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/out/debug
-)
+#set_target_properties(PolarisEngine PROPERTIES
+#    OUTPUT_NAME "engine"
+#    RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/cmake-debug-build
+#    LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/build/debug
+#    ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/build/debug
+#)
 
 # Interface target for headers
 add_library(PolarisEngine_Headers INTERFACE)
 target_include_directories(PolarisEngine_Headers INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-
-# Copy SDL3.dll to output directory after build
-add_custom_command(TARGET PolarisEngine POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_LIST_DIR}/Packages/bin/SDL3.dll"
-        $<TARGET_FILE_DIR:PolarisEngine>
-)
-
-add_custom_command(TARGET PolarisEngine POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_LIST_DIR}/Packages/bin/SDL3_image.dll"
-        $<TARGET_FILE_DIR:PolarisEngine>
-)
-
-add_custom_command(TARGET PolarisEngine POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_LIST_DIR}/Packages/bin/SDL3_mixer.dll"
-        $<TARGET_FILE_DIR:PolarisEngine>
-)
-
-add_custom_command(TARGET PolarisEngine POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_LIST_DIR}/Packages/bin/SDL3_ttf.dll"
-        $<TARGET_FILE_DIR:PolarisEngine>
-)
