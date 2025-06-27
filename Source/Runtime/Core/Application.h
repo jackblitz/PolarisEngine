@@ -17,9 +17,14 @@ public:
     // Called by Engine when the window is created
     void setWindow(SDL_Window* window);
 
-protected:
     // Called when the window is set/created
     virtual void OnCreated();
+
+    // Called by Engine before shutdown
+    virtual void onDestroy();
+
+protected:
+
     SDL_Window* m_window;
     Engine m_engine;
 };

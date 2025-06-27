@@ -1,36 +1,50 @@
 #include "Application.h"
-#include "Engine.h"
 #include <iostream>
+#include <stdexcept>
+#include "Logger.h"
 
 namespace polaris {
 
 Application::Application() : m_window(nullptr) {
-    std::cout << "Application constructed." << std::endl;
+    LOG_INFO("Application constructed");
 }
 
 Application::~Application() {
-    std::cout << "Application destructed." << std::endl;
+    LOG_INFO("Application destructed");
 }
 
 void Application::initialize() {
-    std::cout << "Application initialized." << std::endl;
-    m_engine.setApplication(this);  // Pass 'this' to the Engine
-    m_engine.initialize();
+    LOG_INFO("Application initializing...");
+    try {
+        m_engine.setApplication(this);
+        m_engine.initialize();
+    } catch (const std::exception& e) {
+        LOG_ERROR("Application initialization failed");
+        throw;
+    }
 }
 
 void Application::run() {
+    LOG_INFO("Application Running...");
     m_engine.run();
 }
 
 void Application::setWindow(SDL_Window* window) {
+    if (!window) {
+        LOG_ERROR("Cannot set null window");
+        throw std::invalid_argument("Cannot set null window");
+    }
+    
     m_window = window;
     OnCreated();
 }
 
 void Application::OnCreated() {
-    std::cout << "Application OnCreated: Window is now available." << std::endl;
-    // Show the window after engine initialization is complete
-    SDL_ShowWindow(m_window);
+    LOG_INFO("Application OnCreated: Window is now available.");
+}
+
+void Application::onDestroy() {
+    LOG_INFO("Application onDestroy: Cleaning up application resources.");
 }
 
 } // namespace polaris 
