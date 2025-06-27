@@ -49,7 +49,6 @@ void Engine::initialize() {
         } else {
             std::cout << "Window created but no application set to receive it." << std::endl;
         }
-        run();
     }
 }
 
@@ -71,10 +70,6 @@ void Engine::run() {
 
         //Call rendering engine
     }
-}
-
-void Engine::shutdown() {
-    std::cout << "Engine shutting down." << std::endl;
 }
 
 } // namespace polaris 

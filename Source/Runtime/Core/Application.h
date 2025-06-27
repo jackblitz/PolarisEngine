@@ -12,19 +12,16 @@ public:
     virtual ~Application();
 
     virtual void initialize();
-    virtual void shutdown();
+    void run();
 
     // Called by Engine when the window is created
     void setWindow(SDL_Window* window);
-    void bindApplication(); // Called on devices like android when the surface needs binding to the activity
-    void setFullscreen(bool fullscreen);
 
 protected:
     // Called when the window is set/created
     virtual void OnCreated();
     SDL_Window* m_window;
-    Engine* m_engine;
-    bool m_running = true;
+    Engine m_engine;
 };
 
 } // namespace polaris

@@ -14,13 +14,12 @@ Application::~Application() {
 
 void Application::initialize() {
     std::cout << "Application initialized." << std::endl;
-    Engine engine;
-    engine.setApplication(this);  // Pass 'this' to the Engine
-    engine.initialize();
+    m_engine.setApplication(this);  // Pass 'this' to the Engine
+    m_engine.initialize();
 }
 
-void Application::shutdown() {
-    std::cout << "Application shutting down." << std::endl;
+void Application::run() {
+    m_engine.run();
 }
 
 void Application::setWindow(SDL_Window* window) {
