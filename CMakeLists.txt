@@ -33,9 +33,11 @@ find_package(Vulkan REQUIRED)
 # Create the static library
 add_library(PolarisEngine STATIC
     library.cpp
-        source/runtime/core/rendering/PlatformRendering.cpp
-        source/runtime/core/rendering/SDLRenderer.cpp
-        source/runtime/core/rendering/VulkanRenderer.cpp
+    source/runtime/core/Engine.cpp
+    source/runtime/core/Application.cpp
+    source/runtime/core/rendering/PlatformRendering.cpp
+    source/runtime/core/rendering/SDLRenderer.cpp
+    source/runtime/core/rendering/VulkanRenderer.cpp
 )
 
 # Set output directories for the static library
@@ -63,5 +65,6 @@ target_include_directories(PolarisEngine PRIVATE ${THIRD_PARTY_DIR}/SDL/include)
 add_library(PolarisEngine_Headers INTERFACE)
 target_include_directories(PolarisEngine_Headers INTERFACE 
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/runtime/core
     ${CMAKE_CURRENT_SOURCE_DIR}/source/runtime/core/rendering
 )
