@@ -36,7 +36,7 @@ add_library(PolarisEngine STATIC
     source/runtime/core/Engine.cpp
     source/runtime/core/Application.cpp
     source/runtime/core/Logger.cpp
-    source/runtime/core/rendering/PlatformRendering.cpp
+        source/runtime/core/rendering/PlatformRenderer.cpp
     source/runtime/core/rendering/SDLRenderer.cpp
     source/runtime/core/rendering/VulkanRenderer.cpp
 )

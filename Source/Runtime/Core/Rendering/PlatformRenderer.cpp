@@ -2,19 +2,29 @@
 // Created by luke on 6/23/2025.
 //
 
-#include "PlatformRendering.h"
+#include "PlatformRenderer.h"
 
 
-PlatformRendering* PlatformRendering::_instance = nullptr;
+PlatformRenderer* PlatformRenderer::_instance = nullptr;
 
-PlatformRendering::PlatformRendering() {
+PlatformRenderer::PlatformRenderer() {
 
 }
 
-PlatformRendering::~PlatformRendering() {
+PlatformRenderer::~PlatformRenderer() {
 }
 
-PlatformRendering * PlatformRendering::getInstance() {
+void PlatformRenderer::RenderFrame() {
+
+}
+
+void PlatformRenderer::CreateRenderer(SDL_Window *window) {
+    _instance = new PlatformRenderer();
+}
+
+
+
+PlatformRenderer * PlatformRenderer::getInstance() {
 /*#ifdef PLATFORM_ANDROID
     if (!_instance) {
         instance_ = new PlatformAndroid();

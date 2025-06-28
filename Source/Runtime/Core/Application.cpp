@@ -60,6 +60,8 @@ void Application::setWindow(SDL_Window* window) {
     
     m_window = window;
     OnCreated();
+
+    SDL_ShowWindow(m_window);
 }
 
 /**

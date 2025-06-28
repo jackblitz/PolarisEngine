@@ -1,36 +1,36 @@
 #include "SDLRenderer.h"
+
+#include <PlatformRenderer.h>
 #include <stdexcept>
 
 namespace polaris
 {
-    SDLRenderer::SDLRenderer() : m_pWindow(nullptr), m_pSdlRenderer(nullptr)
+       /* m_pSdlRenderer = SDL_CreateRenderer(m_pWindow, nullptr);
+        if (m_pSdlRenderer == nullptr)
+        {
+            throw std::runtime_error("Failed to create SDL3 renderer");
+        }*/
+
+    SDLRenderer::SDLRenderer(): m_pSdlRenderer(nullptr) {
+
+    }
+
+    SDLRenderer::~SDLRenderer()
     {
-        if (SDL_Init(SDL_INIT_VIDEO) != 0)
-        {
-            throw std::runtime_error("Failed to initialize SDL3");
-        }
+        SDL_DestroyRenderer(m_pSdlRenderer);
+        SDL_Quit();
+    }
 
-        m_pWindow = SDL_CreateWindow("Vega42", 1280, 720, 0);
-        if (m_pWindow == nullptr)
-        {
-            throw std::runtime_error("Failed to create SDL3 window");
-        }
-
-        m_pSdlRenderer = SDL_CreateRenderer(m_pWindow, nullptr);
+    void SDLRenderer::CreateRenderer(SDL_Window* window) {
+        m_pSdlRenderer = SDL_CreateRenderer(window, nullptr);
         if (m_pSdlRenderer == nullptr)
         {
             throw std::runtime_error("Failed to create SDL3 renderer");
         }
     }
 
-    SDLRenderer::~SDLRenderer()
-    {
-        SDL_DestroyRenderer(m_pSdlRenderer);
-        SDL_DestroyWindow(m_pWindow);
-        SDL_Quit();
-    }
 
-    void SDLRenderer::render()
+    void SDLRenderer::RenderFrame()
     {
         SDL_SetRenderDrawColor(m_pSdlRenderer, 255, 0, 0, 255);
         SDL_RenderClear(m_pSdlRenderer);
