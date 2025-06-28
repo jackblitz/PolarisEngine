@@ -2,6 +2,7 @@
 #define POLARIS_ENGINE_H
 
 #include <SDL3/SDL.h>
+#include "rendering/PlatformRenderer.h"
 
 namespace polaris {
     class Application; // Forward declaration
@@ -42,16 +43,15 @@ public:
      * @param app A pointer to the Application instance.
      */
     void setApplication(polaris::Application* app);
-    
-    /**
-     * @brief Retrieves the SDL window managed by the engine.
-     * @return A pointer to the SDL_Window object.
-     */
-    SDL_Window* getWindow() const { return m_window; }
+
+    void shutdown();
+
 
 private:
     SDL_Window* m_window;
+    PlatformRenderer* m_renderer;
     polaris::Application* m_application;
+
 };
 
 } // namespace polaris

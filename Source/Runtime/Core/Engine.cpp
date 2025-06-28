@@ -1,4 +1,7 @@
 #include "Engine.h"
+
+#include <SDLRenderer.h>
+
 #include "Application.h"
 #include "Logger.h"
 #include <SDL3/SDL.h>
@@ -10,7 +13,7 @@ namespace polaris {
      * Initializes internal pointers to null and logs the construction.
      * The constructor is kept lightweight; actual initialization is done in initialize().
      */
-    Engine::Engine() : m_window(nullptr), m_application(nullptr) {
+    Engine::Engine() : m_application(nullptr) {
         LOG_INFO("Engine constructed");
         // Constructor is now lightweight - initialization moved to initialize()
     }
@@ -20,7 +23,6 @@ namespace polaris {
      * Logs the destruction of the engine. Actual SDL cleanup is handled in the shutdown() method.
      */
     Engine::~Engine() {
-        //shutdown(); // Shutdown is called explicitly before destruction
         LOG_INFO("Engine destructed");
     }
 
@@ -63,12 +65,16 @@ namespace polaris {
 
         LOG_INFO("Engine initialized successfully");
 
+        m_renderer = new SDLRenderer();
+
         // Notify application if set
         if (m_application) {
             m_application->setWindow(m_window);
         } else {
             LOG_WARN("No application set, skipping setWindow call");
         }
+
+        m_renderer->CreateRenderer(m_window);
     }
 
     /**
@@ -87,9 +93,6 @@ namespace polaris {
 
         SDL_Event event;
         bool quit = false;
-
-        // Show window after initialization
-        SDL_ShowWindow(m_window);
 
         while (!quit) {
             // Process all pending events
@@ -111,6 +114,7 @@ namespace polaris {
 
             // Render frame (placeholder for rendering engine)
             // renderFrame();
+            m_renderer->RenderFrame();
 
             // Cap frame rate to ~60 FPS
             SDL_Delay(16);
