@@ -142,7 +142,9 @@ namespace polaris {
             m_window = nullptr;
         }
 
+        // Quit SDL subsystems
         SDL_Quit();
         LOG_INFO("Engine shutdown complete");
+    }
     }
 } // namespace polaris

@@ -44,12 +44,25 @@ public:
      */
     void setApplication(polaris::Application* app);
 
+    /**
+     * @brief Shuts down the engine.
+     * This method cleans up any remaining resources and prepares the engine for termination.
+     */
     void shutdown();
 
 
 private:
+    /**
+     * @brief Pointer to the SDL window.
+     */
     SDL_Window* m_window;
+    /**
+     * @brief Pointer to the platform-specific renderer.
+     */
     PlatformRenderer* m_renderer;
+    /**
+     * @brief Pointer to the application instance.
+     */
     polaris::Application* m_application;
 
 };
