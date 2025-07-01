@@ -5,8 +5,9 @@ set(CMAKE_CXX_STANDARD 20)
 
 # Set paths for third-party libraries
 set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/source/third_party)
-#set(INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/packages)
+set(INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/packages)
 
+message(STATUS "Path to third-party libs: ${THIRD_PARTY_DIR}")
 # Build SDL3
 add_subdirectory(${THIRD_PARTY_DIR}/SDL)
 
@@ -26,50 +27,75 @@ add_subdirectory(${THIRD_PARTY_DIR}/SDL_image)
 
 #set(DAV1D_ASM OFF CACHE BOOL "Disable dav1d assembly optimizations" FORCE)
 
-# Find Vulkan
-find_package(Vulkan REQUIRED)
 
 # FFmpeg configuration
 set(FFMPEG_DIR ${THIRD_PARTY_DIR}/ffmpeg)
 set(FFMPEG_INCLUDE_DIR ${FFMPEG_DIR}/libavcodec ${FFMPEG_DIR}/libavformat ${FFMPEG_DIR}/libavutil ${FFMPEG_DIR}/libswscale ${FFMPEG_DIR}/libswresample)
 
-# Create the static library
-add_library(PolarisEngine STATIC
-    library.cpp
-    source/runtime/core/Engine.cpp
-    source/runtime/core/Application.cpp
-    source/runtime/core/Logger.cpp
-    source/runtime/core/rendering/PlatformRenderer.cpp
-    source/runtime/core/rendering/SDLRenderer.cpp
-    source/runtime/core/rendering/VulkanRenderer.cpp
-    source/runtime/core/rendering/VideoRenderer.cpp
-    source/runtime/core/video/VideoDecoder.cpp
-)
+if(ANDROID)
+    add_library(Polaris SHARED
+        library.cpp
+        source/runtime/core/Engine.cpp
+        source/runtime/core/Application.cpp
+        source/runtime/core/Logger.cpp
+        source/runtime/core/rendering/PlatformRenderer.cpp
+        source/runtime/core/rendering/SDLRenderer.cpp
+      # source/runtime/core/rendering/VulkanRenderer.cpp
+        source/runtime/core/rendering/VideoRenderer.cpp
+        source/runtime/core/video/VideoDecoder.cpp
+    )
+    set(PLATFORM_COMPILE_OPTIONS
+            -DANDROID
+            #-DVK_USE_PLATFORM_ANDROID_KHR     # Vulkan Android-specific platform define
+            -fno-limit-debug-info             # Debug info for Android
+            -std=c++14                        # Use C++14 for Android (adjust as needed)
+    )
+    target_compile_definitions(Polaris PRIVATE PLATFORM_ANDROID)
+    find_library(
+            # Sets the name of the path variable.
+            log-lib
 
-# Set output directories for the static library
-set_target_properties(PolarisEngine PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-)
+            # Specifies the name of the NDK library that
+            # you want CMake to locate.
+            log )
 
-if(WIN32)
+
+    target_link_libraries(Polaris PUBLIC PolarisEngine_Headers SDL3::SDL3 SDL3_image::SDL3_image android ${log-lib})
+else()
+    add_library(PolarisEngine STATIC
+        library.cpp
+        source/runtime/core/Engine.cpp
+        source/runtime/core/Application.cpp
+        source/runtime/core/Logger.cpp
+        source/runtime/core/rendering/PlatformRenderer.cpp
+        source/runtime/core/rendering/SDLRenderer.cpp
+        source/runtime/core/rendering/VulkanRenderer.cpp
+        source/runtime/core/rendering/VideoRenderer.cpp
+        source/runtime/core/video/VideoDecoder.cpp
+    )
+    set_target_properties(PolarisEngine PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    )
+    find_package(Vulkan REQUIRED)
     target_compile_definitions(PolarisEngine PRIVATE PLATFORM_WINDOWS _USE_MATH_DEFINES VK_USE_PLATFORM_WIN32_KHR)
-elseif(APPLE)
-    target_compile_definitions(PolarisEngine PRIVATE PLATFORM_MAC)
-elseif(UNIX AND NOT ANDROID)
-    target_compile_definitions(PolarisEngine PRIVATE PLATFORM_LINUX)
-elseif(ANDROID)
-    target_compile_definitions(PolarisEngine PRIVATE PLATFORM_ANDROID)
+    target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers SDL3::SDL3 SDL3_image::SDL3_image Vulkan::Vulkan)
 endif()
 
-# Link SDL3, Vulkan, and FFmpeg
-target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers SDL3::SDL3 SDL3_image::SDL3_image Vulkan::Vulkan)
-
-target_include_directories(PolarisEngine PRIVATE 
-    ${THIRD_PARTY_DIR}/SDL/include 
-    ${THIRD_PARTY_DIR}/SDL_image/include
-)
+if(ANDROID)
+    target_include_directories(Polaris PRIVATE
+        ${Vulkan_INCLUDE_DIRS}
+        ${THIRD_PARTY_DIR}/SDL/include
+        ${THIRD_PARTY_DIR}/SDL_image/include
+    )
+else()
+    target_include_directories(PolarisEngine PRIVATE
+        ${Vulkan_INCLUDE_DIRS}
+        ${THIRD_PARTY_DIR}/SDL/include
+        ${THIRD_PARTY_DIR}/SDL_image/include
+    )
+endif()
 
 # Interface target for headers
 add_library(PolarisEngine_Headers INTERFACE)

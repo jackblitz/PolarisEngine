@@ -3,11 +3,13 @@
 
 #include "Engine.h"
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
 
 namespace polaris {
 
 class Application {
 public:
+    int main(int argc, char *argv[]);
     /**
      * @brief Constructs an Application object.
      * Initializes the application with a null window pointer.
