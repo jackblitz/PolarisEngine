@@ -114,10 +114,11 @@ namespace polaris {
 
             // Render frame (placeholder for rendering engine)
             // renderFrame();
+
             m_renderer->RenderFrame();
 
             // Cap frame rate to ~60 FPS
-            SDL_Delay(16);
+            //SDL_Delay(16);
         }
 
         shutdown();
@@ -146,5 +147,4 @@ namespace polaris {
         SDL_Quit();
         LOG_INFO("Engine shutdown complete");
     }
-    }
-} // namespace polaris
+} // namespce polari

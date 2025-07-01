@@ -13,3 +13,9 @@
 [submodule "Source/Third_Party/freetype"]
 	path = Source/Third_Party/freetype
 	url = https://github.com/freetype/freetype.git
+[submodule "source/third_party/ffmpeg"]
+	path = source/third_party/ffmpeg
+	url = https://github.com/FFmpeg/FFmpeg.git
+[submodule "source/third_party/Odin"]
+	path = source/third_party/Odin
+	url = https://github.com/odin-lang/Odin.git
