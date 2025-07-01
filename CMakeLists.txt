@@ -33,7 +33,7 @@ set(FFMPEG_DIR ${THIRD_PARTY_DIR}/ffmpeg)
 set(FFMPEG_INCLUDE_DIR ${FFMPEG_DIR}/libavcodec ${FFMPEG_DIR}/libavformat ${FFMPEG_DIR}/libavutil ${FFMPEG_DIR}/libswscale ${FFMPEG_DIR}/libswresample)
 
 if(ANDROID)
-    add_library(Polaris SHARED
+    add_library(PolarisEngine SHARED
         library.cpp
         source/runtime/core/Engine.cpp
         source/runtime/core/Application.cpp
@@ -50,7 +50,7 @@ if(ANDROID)
             -fno-limit-debug-info             # Debug info for Android
             -std=c++14                        # Use C++14 for Android (adjust as needed)
     )
-    target_compile_definitions(Polaris PRIVATE PLATFORM_ANDROID)
+    target_compile_definitions(PolarisEngine PRIVATE PLATFORM_ANDROID)
     find_library(
             # Sets the name of the path variable.
             log-lib
@@ -60,7 +60,7 @@ if(ANDROID)
             log )
 
 
-    target_link_libraries(Polaris PUBLIC PolarisEngine_Headers SDL3::SDL3 SDL3_image::SDL3_image android ${log-lib})
+    target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers SDL3::SDL3 SDL3_image::SDL3_image android ${log-lib})
 else()
     add_library(PolarisEngine STATIC
         library.cpp
@@ -73,29 +73,23 @@ else()
         source/runtime/core/rendering/VideoRenderer.cpp
         source/runtime/core/video/VideoDecoder.cpp
     )
-    set_target_properties(PolarisEngine PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-    )
+    #set_target_properties(PolarisEngine PROPERTIES
+    #    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    #    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    #    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    #)
     find_package(Vulkan REQUIRED)
     target_compile_definitions(PolarisEngine PRIVATE PLATFORM_WINDOWS _USE_MATH_DEFINES VK_USE_PLATFORM_WIN32_KHR)
     target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers SDL3::SDL3 SDL3_image::SDL3_image Vulkan::Vulkan)
 endif()
 
-if(ANDROID)
-    target_include_directories(Polaris PRIVATE
-        ${Vulkan_INCLUDE_DIRS}
-        ${THIRD_PARTY_DIR}/SDL/include
-        ${THIRD_PARTY_DIR}/SDL_image/include
-    )
-else()
+
     target_include_directories(PolarisEngine PRIVATE
         ${Vulkan_INCLUDE_DIRS}
         ${THIRD_PARTY_DIR}/SDL/include
         ${THIRD_PARTY_DIR}/SDL_image/include
     )
-endif()
+
 
 # Interface target for headers
 add_library(PolarisEngine_Headers INTERFACE)
