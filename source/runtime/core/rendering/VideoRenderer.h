@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include "../video/VideoDecoder.h"
+#include "../video/VideoDecoderFactory.h"
 
 namespace polaris {
 

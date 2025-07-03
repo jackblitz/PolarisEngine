@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.30)
 project(PolarisEngine)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Fix MinGW compilation issues
+#if(MINGW)
+#    add_compile_definitions(_WIN32_WINNT=0x0601)
+#    add_compile_options(-D_WIN32_WINNT=0x0601)
+#endif()
 
 # Set paths for third-party libraries
 set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/source/third_party)
@@ -29,8 +36,15 @@ add_subdirectory(${THIRD_PARTY_DIR}/SDL_image)
 
 
 # FFmpeg configuration
-set(FFMPEG_DIR ${THIRD_PARTY_DIR}/ffmpeg)
-set(FFMPEG_INCLUDE_DIR ${FFMPEG_DIR}/libavcodec ${FFMPEG_DIR}/libavformat ${FFMPEG_DIR}/libavutil ${FFMPEG_DIR}/libswscale ${FFMPEG_DIR}/libswresample)
+#set(FFMPEG_DIR ${THIRD_PARTY_DIR}/ffmpeg)
+#set(FFMPEG_INCLUDE_DIR ${FFMPEG_DIR}/libavcodec ${FFMPEG_DIR}/libavformat ${FFMPEG_DIR}/libavutil ${FFMPEG_DIR}/libswscale ${FFMPEG_DIR}/libswresample)
+
+# Build FFmpeg libraries - commented out for now
+#add_subdirectory(${FFMPEG_DIR}/libavutil)
+#add_subdirectory(${FFMPEG_DIR}/libavcodec)
+#add_subdirectory(${FFMPEG_DIR}/libavformat)
+#add_subdirectory(${FFMPEG_DIR}/libswscale)
+# add_subdirectory(${FFMPEG_DIR}/libswresample)
 
 if(ANDROID)
     add_library(PolarisEngine SHARED
@@ -43,6 +57,8 @@ if(ANDROID)
       # source/runtime/core/rendering/VulkanRenderer.cpp
         source/runtime/core/rendering/VideoRenderer.cpp
         source/runtime/core/video/VideoDecoder.cpp
+        source/runtime/core/video/FFmpegVideoDecoder.cpp
+        source/runtime/core/video/VideoDecoderFactory.cpp
     )
     set(PLATFORM_COMPILE_OPTIONS
             -DANDROID
@@ -72,6 +88,8 @@ else()
         source/runtime/core/rendering/VulkanRenderer.cpp
         source/runtime/core/rendering/VideoRenderer.cpp
         source/runtime/core/video/VideoDecoder.cpp
+        source/runtime/core/video/FFmpegVideoDecoder.cpp
+        source/runtime/core/video/VideoDecoderFactory.cpp
     )
     #set_target_properties(PolarisEngine PROPERTIES
     #    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
@@ -88,6 +106,7 @@ endif()
         ${Vulkan_INCLUDE_DIRS}
         ${THIRD_PARTY_DIR}/SDL/include
         ${THIRD_PARTY_DIR}/SDL_image/include
+      #  ${FFMPEG_INCLUDE_DIR}
     )
 
 

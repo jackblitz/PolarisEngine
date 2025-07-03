@@ -21,16 +21,16 @@ public:
     ~VideoDecoder();
 
     // Initialize the decoder
-    bool initialize();
+    virtual bool initialize();
     
     // Open and decode a video file
-    bool openFile(const std::string& filename);
+    virtual bool openFile(const std::string& filename);
     
     // Get next frame
-    bool getNextFrame(VideoFrame& frame);
+    virtual bool getNextFrame(VideoFrame& frame);
     
     // Seek to specific time
-    bool seekTo(double timeInSeconds);
+    virtual bool seekTo(double timeInSeconds);
     
     // Get video information
     int getWidth() const { return m_width; }
@@ -40,9 +40,9 @@ public:
     bool isOpen() const { return m_isOpen; }
     
     // Cleanup
-    void close();
+    virtual void close();
 
-private:
+protected:
     // Video properties
     int m_width;
     int m_height;
@@ -58,7 +58,7 @@ private:
     double m_currentTime;
     
     // Helper methods
-    void cleanup();
+    virtual void cleanup();
     void generateDemoFrame(VideoFrame& frame);
 };
 
