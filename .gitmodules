@@ -1,0 +1,21 @@
+[submodule "source/third_party/sdl"]
+	path = source/third_party/sdl
+	url = https://github.com/libsdl-org/SDL.git
+[submodule "source/third_party/sdl_image"]
+	path = source/third_party/sdl_image
+	url = https://github.com/libsdl-org/SDL_image.git
+[submodule "source/third_party/sdl_mixer"]
+	path = source/third_party/sdl_mixer
+	url = https://github.com/libsdl-org/SDL_mixer.git
+[submodule "source/third_party/sdl_ttf"]
+	path = source/third_party/sdl_ttf
+	url = https://github.com/libsdl-org/SDL_ttf.git
+[submodule "source/third_party/free_type"]
+	path = source/third_party/free_type
+	url = https://github.com/freetype/freetype.git
+[submodule "source/third_party/ffmpeg"]
+	path = source/third_party/ffmpeg
+	url = https://github.com/FFmpeg/FFmpeg.git
+[submodule "source/third_party/odin"]
+	path = source/third_party/odin
+	url = https://github.com/odin-lang/Odin.git
