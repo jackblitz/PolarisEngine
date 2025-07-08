@@ -14,7 +14,8 @@ if(APPLE)
 endif()
 
 if(DEFINED ENV{VULKAN_SDK})
-    set(CMAKE_PREFIX_PATH $ENV{VULKAN_SDK})
+    find_path(Vulkan_INCLUDE_DIR NAMES vulkan/vulkan.h HINTS $ENV{VULKAN_SDK}/include)
+    find_library(Vulkan_LIBRARY NAMES vulkan HINTS $ENV{VULKAN_SDK}/lib)
 endif()
 
 find_package(Vulkan REQUIRED)
