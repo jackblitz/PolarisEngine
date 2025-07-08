@@ -5,6 +5,11 @@ project(PolarisEngine)
 set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/source/third_party)
 set(INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/packages)
 
+if(APPLE)
+    set(SDL_VULKAN OFF CACHE BOOL "Disable Vulkan support for SDL3" FORCE)
+    set(SDL_METAL ON CACHE BOOL "Enable Metal support for SDL3" FORCE)
+endif()
+
 # Build SDL3
 add_subdirectory(${THIRD_PARTY_DIR}/sdl)
 
@@ -56,15 +61,9 @@ if(WIN32)
 elseif(UNIX) # This will cover Linux
     target_compile_definitions(PolarisEngine PRIVATE PLATFORM_LINUX SDL_RENDER_WAYLAND) # Enable Wayland rendering for Linux
 elseif(APPLE)
-    set(SDL_VULKAN OFF CACHE BOOL "Disable Vulkan support for SDL3" FORCE)
-    set(SDL_METAL ON CACHE BOOL "Enable Metal support for SDL3" FORCE)
     target_compile_definitions(PolarisEngine PRIVATE PLATFORM_MAC SDL_RENDER_METAL) # Enable Metal rendering for macOS/iOS
 elseif(ANDROID)
     target_compile_definitions(PolarisEngine PRIVATE PLATFORM_ANDROID) # Add any other macOS-specific definitions if needed
-endif()
-
-if(NOT APPLE)
-    find_package(Vulkan REQUIRED)
 endif()
 
 target_include_directories(PolarisEngine PRIVATE
