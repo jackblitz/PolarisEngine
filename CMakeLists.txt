@@ -5,6 +5,10 @@ project(PolarisEngine)
 set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/source/third_party)
 set(INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/packages)
 
+if(WIN32 OR (UNIX AND NOT APPLE))
+    set(SDL_VULKAN ON CACHE BOOL "Enable Vulkan support for SDL3" FORCE)
+endif()
+
 if(APPLE)
     set(SDL_VULKAN OFF CACHE BOOL "Disable Vulkan support for SDL3" FORCE)
     set(SDL_METAL ON CACHE BOOL "Enable Metal support for SDL3" FORCE)
@@ -58,10 +62,10 @@ endif()
 
 if(WIN32)
     target_compile_definitions(PolarisEngine PRIVATE PLATFORM_WINDOWS _USE_MATH_DEFINES VK_USE_PLATFORM_WIN32_KHR)
-elseif(UNIX) # This will cover Linux
-    target_compile_definitions(PolarisEngine PRIVATE PLATFORM_LINUX SDL_RENDER_WAYLAND) # Enable Wayland rendering for Linux
 elseif(APPLE)
     target_compile_definitions(PolarisEngine PRIVATE PLATFORM_MAC SDL_RENDER_METAL) # Enable Metal rendering for macOS/iOS
+elseif(UNIX) # This will cover Linux
+    target_compile_definitions(PolarisEngine PRIVATE PLATFORM_LINUX SDL_RENDER_WAYLAND VK_USE_PLATFORM_WAYLAND_KHR) # Enable Wayland rendering for Linux
 elseif(ANDROID)
     target_compile_definitions(PolarisEngine PRIVATE PLATFORM_ANDROID) # Add any other macOS-specific definitions if needed
 endif()
