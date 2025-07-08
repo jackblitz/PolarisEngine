@@ -63,6 +63,10 @@ elseif(ANDROID)
     target_compile_definitions(PolarisEngine PRIVATE PLATFORM_ANDROID) # Add any other macOS-specific definitions if needed
 endif()
 
+if(NOT APPLE)
+    find_package(Vulkan REQUIRED)
+endif()
+
 target_include_directories(PolarisEngine PRIVATE
         ${THIRD_PARTY_DIR}/SDL/include
         #${THIRD_PARTY_DIR}/SDL_image/include
