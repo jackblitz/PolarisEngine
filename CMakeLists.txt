@@ -62,7 +62,6 @@ elseif(ANDROID)
 endif()
 
 target_include_directories(PolarisEngine PRIVATE
-        ${Vulkan_INCLUDE_DIRS}
         ${THIRD_PARTY_DIR}/SDL/include
         #${THIRD_PARTY_DIR}/SDL_image/include
         #  ${FFMPEG_INCLUDE_DIR}
