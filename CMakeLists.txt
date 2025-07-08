@@ -23,7 +23,7 @@ if(ANDROID)
             -fno-limit-debug-info             # Debug info for Android
             -std=c++14                        # Use C++14 for Android (adjust as needed)
     )
-
+    #target_compile_definitions(PolarisEngine PRIVATE PLATFORM_ANDROID)
     find_library(
             # Sets the name of the path variable.
             log-lib
@@ -34,36 +34,33 @@ if(ANDROID)
 
 
     target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers SDL3::SDL3 android ${log-lib})
-else() # This else now covers WIN32, APPLE, UNIX (non-Android)
+else()
     add_library(PolarisEngine STATIC
-            source/runtime/core/Engine.cpp
-            source/runtime/core/Application.cpp
             source/runtime/core/Logger.cpp
             source/runtime/core/rendering/PlatformRenderer.cpp
             source/runtime/core/rendering/SDLRenderer.cpp
+            source/runtime/core/Engine.cpp
+            source/runtime/core/Application.cpp
     )
-
     #set_target_properties(PolarisEngine PROPERTIES
     #    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     #    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
     #    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
     #)
     find_package(Vulkan REQUIRED)
-
+    #target_compile_definitions(PolarisEngine PRIVATE PLATFORM_WINDOWS _USE_MATH_DEFINES VK_USE_PLATFORM_WIN32_KHR)
     target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers SDL3::SDL3 Vulkan::Vulkan)
 endif()
 
 if(WIN32)
     target_compile_definitions(PolarisEngine PRIVATE PLATFORM_WINDOWS _USE_MATH_DEFINES VK_USE_PLATFORM_WIN32_KHR)
-    elseif(UNIX) # This will cover Linux
-        target_compile_definitions(PolarisEngine PRIVATE PLATFORM_LINUX SDL_RENDER_WAYLAND) # Enable Wayland rendering for Linux
-    elseif(APPLE)
-        target_compile_definitions(PolarisEngine PRIVATE PLATFORM_MAC SDL_RENDER_METAL) # Enable Metal rendering for macOS/iOS
+elseif(UNIX) # This will cover Linux
+    target_compile_definitions(PolarisEngine PRIVATE PLATFORM_LINUX SDL_RENDER_WAYLAND) # Enable Wayland rendering for Linux
+elseif(APPLE)
+    target_compile_definitions(PolarisEngine PRIVATE PLATFORM_MAC SDL_RENDER_METAL) # Enable Metal rendering for macOS/iOS
 elseif(ANDROID)
     target_compile_definitions(PolarisEngine PRIVATE PLATFORM_ANDROID) # Add any other macOS-specific definitions if needed
 endif()
-
-
 
 target_include_directories(PolarisEngine PRIVATE
         ${Vulkan_INCLUDE_DIRS}
