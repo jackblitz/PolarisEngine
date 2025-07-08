@@ -47,9 +47,8 @@ else()
     #    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
     #    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
     #)
-    find_package(Vulkan REQUIRED)
     #target_compile_definitions(PolarisEngine PRIVATE PLATFORM_WINDOWS _USE_MATH_DEFINES VK_USE_PLATFORM_WIN32_KHR)
-    target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers SDL3::SDL3 Vulkan::Vulkan)
+    target_link_libraries(PolarisEngine PUBLIC PolarisEngine_Headers SDL3::SDL3)
 endif()
 
 if(WIN32)
@@ -75,6 +74,6 @@ add_library(PolarisEngine_Headers INTERFACE)
 target_include_directories(PolarisEngine_Headers INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/source/runtime/core
-       # ${CMAKE_CURRENT_SOURCE_DIR}/source/runtime/core/rendering
+        ${CMAKE_CURRENT_SOURCE_DIR}/source/runtime/core/rendering
        # ${CMAKE_CURRENT_SOURCE_DIR}/source/runtime/core/video
 )
